@@ -12,7 +12,6 @@ import com.zerobase.scraper.Scraper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.Trie;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -55,8 +54,8 @@ public class CompanyService {
         // 스크래핑 결과
         CompanyEntity companyEntity = this.companyRepository.save(new CompanyEntity(company));
         List<DividendEntity> dividendEntityList = scrapedResult.getDividends().stream()
-                                                                              .map(e -> new DividendEntity(companyEntity.getId(), e))
-                                                                              .collect(Collectors.toList());
+                .map(e -> new DividendEntity(companyEntity.getId(), e))
+                .collect(Collectors.toList());
         this.dividendRepository.saveAll(dividendEntityList);
         return company;
     }
@@ -85,7 +84,7 @@ public class CompanyService {
 
     public String deleteCompany(String ticker) {
         var company = this.companyRepository.findByTicker(ticker)
-                                            .orElseThrow(() -> new NoCompanyException());
+                .orElseThrow(() -> new NoCompanyException());
 
         this.dividendRepository.deleteAllByCompanyId(company.getId());
         this.companyRepository.delete(company);
